@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const Photo = require('../models/Photo');
+const Product = require('../models/Productt');
 const cloudinary = require('cloudinary');
 
 cloudinary.config({
@@ -12,41 +12,66 @@ cloudinary.config({
 const fs = require('fs-extra');
 
 router.get('/', async (req, res) => {
-    const photos = await Photo.find();
-    //console.log(photos);
-    res.render('images', {photos});
+    const productos = await Product.find();
+    res.render('product_form', {productos});
 });
 
-router.get('/images/add', async (req, res) => {
-    const photos = await Photo.find();
-    res.render('image_form', {photos});
+router.get('/products/add', async (req, res) => {
+    const productos = await Product.find();
+    res.render('product_form', {productos});
 });
 
-router.post('/images/add', async (req, res) => {
-    console.log(req.body);
-    const { title, description } = req.body;
-    console.log(req.file);
+router.post('/products/add', async (req, res) => {
+
+    const { nombre,tipo,codigo,descripcion,precio } = req.body;
     const result = await cloudinary.v2.uploader.upload(req.file.path);
-    console.log(result);
-    
-    const newPhoto = new Photo({
-        title: title,
-        description: description,
+    console.log(req.body)
+    const newProduct = new Product({
+        nombre: nombre,
+        tipo: tipo,
+        codigo: codigo,
+        descripcion:descripcion,
+        precio:precio,
         imageURL: result.url,
         public_id: result.public_id
     });
-
-    await newPhoto.save();
+    console.log(newProduct)
+    await newProduct.save();
     await fs.unlink(req.file.path);
-    res.redirect('/');
+    res.redirect('/products/add');
 });
 
-router.get('/images/delete/:photo_id', async (req, res) => {
-    const { photo_id }= req.params;
-    const photo = await Photo.findByIdAndDelete(photo_id);
-    const result = await cloudinary.v2.uploader.destroy(photo.public_id);
+router.get('/products/delete/:contacto_id', async (req, res) => {
+    const { contacto_id }= req.params;
+    const contacto = await Product.findByIdAndDelete(contacto_id);
+    const result = await cloudinary.v2.uploader.destroy(contacto.public_id);
     console.log(result);
-    res.redirect('/images/add')
+    res.redirect('/products/add')
+});
+
+router.get('/products/edit/:contacto_id',async (req,res) =>{
+    const {contacto_id} = req.params
+    const task = await Product.findById(contacto_id);
+    console.log(task)
+    res.render("edit", {task});
+})
+
+
+router.post('/products/edit/:photo_id',async (req,res) =>{
+    const {photo_id} = req.params;
+    const upd=await Product.updateOne({ _id: photo_id },req.body);
+    console.log("aca",req.body)
+    console.log(upd)
+    res.redirect('/products/add')
+});  
+
+
+router.post('/products/search', async (req, res) => {
+    const { nombre } = req.body;
+    
+    const productos= await Product.find({nombre:nombre})
+   console.log(productos)
+   res.render('product_form', {productos});
 });
 
 module.exports = router;

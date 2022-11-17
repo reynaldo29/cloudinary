@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-md-4">
+
+          <form action="/products/search" method="POST"
+                enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="text" name="nombre"
+                        class="form-control" placeholder="Nombre">
+                    </div>
+                    <button class="btn btn-primary">
+                       Buscar
+                    </button>
+                </form>
+<hr> 
+
+        <div class="card" class="mx-auto" style="width: 350px;">
+            <div class="card-body">
+                <form action="/products/add" method="POST"
+                enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="text" name="nombre"
+                        class="form-control" placeholder="Nombre">
+                    </div>
+
+                       <div class="form-group">
+                        <input type="text" name="tipo"
+                        class="form-control" placeholder="Tipo">
+                    </div>
+
+                       <div class="form-group">
+                        <input type="text" name="codigo"
+                        class="form-control" placeholder="Codigo">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="descripcion"
+                        class="form-control" placeholder="Descripcion">
+                    </div>
+
+                     <div class="form-group">
+                        <input type="text" name="precio"
+                        class="form-control" placeholder="Precio">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" name="image"
+                            class="custom-file-input" id="inputGroupFile01">
+                            <label for="inputGroupFile01"
+                            class="custom-file-label">Choose File</label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Codigo</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                     <th>Imagen</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each productos}}
+                <tr>
+                    <td>{{nombre}}</td>
+                    <td>{{tipo}}</td>
+                    <td>{{codigo}}</td>
+                    <td>{{descripcion}}</td>
+                    <td>{{precio}}</td>
+                    <td><img src="{{imageURL}}" alt="" width="100" height="100" ></td>
+                    <td>
+                        <a href="{{imageURL}}" target="_blank"
+                        class="btn btn-outline-danger bi bi-eye-fill "></a>
+                        <a href="/products/delete/{{_id}}" class="btn btn-outline-danger bi bi-trash"></a>
+                        <a href="/products/edit/{{_id}}" class="btn btn-outline-primary bi bi-pencil"></a>
+                    </td>
+
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
